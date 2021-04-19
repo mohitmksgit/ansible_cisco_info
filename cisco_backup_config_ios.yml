@@ -1,0 +1,14 @@
+---
+- name: Playbook to backup running config of Cisco IOS device
+  hosts: cisco_ios
+  gather_facts: no
+  connection: network_cli
+
+  tasks:
+     - name: Backing up Running Config into playbook directory
+       ios_config:
+         backup: yes
+         backup_options:
+           filename: "{{ inventory_hostname }}-{{ lookup('pipe', 'date +%Y%m%d-%H-%M') }}_running-config.cfg"
+           dir_path: ./
+        

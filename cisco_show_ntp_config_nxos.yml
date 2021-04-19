@@ -1,0 +1,20 @@
+---
+- name: Playbook to view NTP config
+  hosts: nxos
+  gather_facts: no
+  connection: local
+
+  tasks:
+
+  - name: Checking config
+    nxos_command:
+       commands:
+        - show running-config | include "clock timezone"
+        - show running-config | include "clock summer-time"
+        - show running-config | include "ntp source"
+        - show running-config | include "ntp server"
+        - show running-config | include "ntp access-group"
+    register: output
+
+  - debug:
+      var: output.stdout

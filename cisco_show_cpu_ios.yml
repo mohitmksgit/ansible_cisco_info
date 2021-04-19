@@ -1,0 +1,16 @@
+---
+- name: Playbook to view CPU usage on Cisco IOS devices
+  hosts: cisco_ios
+  gather_facts: no
+  connection: network_cli
+
+  tasks:
+
+  - name: Running "show cpu process" command
+    ios_command:
+      commands:
+        - show processes cpu sorted  | i CPU
+    register: output
+
+  - debug:
+      var: output.stdout

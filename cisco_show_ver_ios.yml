@@ -1,0 +1,16 @@
+---
+- name: Playbook to run "show version" command on Cisco IOS devices
+  hosts: cisco_ios
+  gather_facts: no
+  connection: network_cli
+
+  tasks:
+
+  - name: Running "show version" command on device
+    ios_command:
+      commands:
+        - show ver
+    register: output
+
+  - debug:
+      var: output.stdout

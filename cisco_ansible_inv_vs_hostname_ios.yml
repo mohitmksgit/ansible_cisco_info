@@ -1,0 +1,24 @@
+--
+- name: Ansible inventory hostname vs device hostname Comparison Playbook
+  hosts: cisco_ios
+  gather_facts: false
+  connection: local
+
+  tasks:
+
+  - name: Checking hostname configuration
+    ios_facts:
+       gather_subset: hardware
+    
+  - name: View device and inventory hostname
+    debug:
+      msg: 
+#      -  "{{ansible_net_hostname}},{{host_alias}} "
+      -  "The device hostname is {{ ansible_net_hostname }} and Ansible inventory hostname is {{ host_alias }}"
+      
+  - name: Verify if ansible inventory has correct hostname
+    assert:
+      that:
+        - ansible_net_hostname == host_alias
+      fail_msg: "Hostname does not match"
+      success_msg: "Hostname match"

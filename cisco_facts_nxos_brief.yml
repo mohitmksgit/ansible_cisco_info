@@ -1,0 +1,19 @@
+---
+- name: NXOS Facts Playbook
+  hosts: nxos
+  gather_facts: true
+  connection: network_cli
+
+  tasks:
+
+  - name: Checking device information
+    nxos_facts:
+       gather_subset: hardware
+    
+  - name: Display facts
+    debug:
+      msg: 
+      -  "The hostname is {{ ansible_net_hostname  }} and the Serial is {{ ansible_net_serialnum }}"
+      -  "The hostname is {{ ansible_net_hostname  }} and the Platform is {{ ansible_net_platform }}"
+      -  "The hostname is {{ ansible_net_hostname  }} and the OS type is {{ ansible_net_system }}"
+      -  "The hostname is {{ ansible_net_hostname  }} and the OS version is {{ ansible_net_version }}"

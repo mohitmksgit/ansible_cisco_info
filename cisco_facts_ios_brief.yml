@@ -1,0 +1,19 @@
+---
+- name: IOS Facts Playbook
+  hosts: cisco_ios
+  gather_facts: false
+  connection: network_cli
+
+  tasks:
+
+  - name: View device information
+    ios_facts:
+       gather_subset: hardware
+    
+  - name: Display facts
+    debug:
+      msg: 
+      -  "The hostname is {{ ansible_net_hostname  }} and the Serial is {{ ansible_net_serialnum }}"
+      -  "The hostname is {{ ansible_net_hostname  }} and the Model is {{ ansible_net_model }}"
+      -  "The hostname is {{ ansible_net_hostname  }} and the OS type is {{ ansible_net_system }}"
+      -  "The hostname is {{ ansible_net_hostname  }} and the OS version is {{ ansible_net_version }}"

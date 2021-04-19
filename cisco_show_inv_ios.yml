@@ -1,0 +1,16 @@
+---
+- name: Playbook to run "show inventory" on Cisco IOS devices
+  hosts: cisco_ios
+  gather_facts: no
+  connection: network_cli
+
+  tasks:
+
+  - name: Running command
+    ios_command:
+      commands:
+        - show inventory
+    register: output
+
+  - debug:
+      var: output.stdout

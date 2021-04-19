@@ -1,0 +1,16 @@
+---
+- name: Playbook to run "show version" command on Cisco NXOS devices
+  hosts: nxos
+  gather_facts: no
+  connection: network_cli
+
+  tasks:
+
+  - name: Running "show version" command on device
+    nxos_command:
+      commands:
+        - show ver
+    register: output
+
+  - debug:
+      var: output.stdout

@@ -1,0 +1,17 @@
+---
+- name: Cisco IOS Facts Playbook
+  hosts: cisco_ios
+  gather_facts: false
+  connection: network_cli
+
+  tasks:
+
+  - name: Checking device information
+    ios_facts:
+       gather_subset: hardware
+       
+    register: facts
+  - name: Display facts
+    debug:
+      var: facts
+

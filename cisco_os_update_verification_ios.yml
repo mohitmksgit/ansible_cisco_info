@@ -1,0 +1,74 @@
+---
+- name: Cisco IOS upgrade checklist playbook
+  hosts: cisco_ios
+  gather_facts: no
+  connection: network_cli
+
+  vars: 
+    upgrade_ios_version: 15.6(3)T
+  
+  tasks:
+
+    - name: Checking current IOS version
+      ios_facts:
+
+    - debug: 
+        msg: 
+        - "Current version is {{ ansible_net_version }}"
+        - "Upgrade image is 15.6(3)T"
+
+    - debug: 
+        msg: 
+        - "Image is not compliant and needs to be upgraded"
+
+      when: ansible_net_version != upgrade_ios_version
+  
+    - name: Check CPU utilization
+      ios_command:
+        commands:
+          - 'show processes cpu | include utilization'
+      register: output
+
+    - debug: var=output.stdout_lines
+
+    - name: Check Memory utilization
+      ios_command:
+        commands:
+          - 'show processes memory | i Processor'
+      register: output
+
+    - debug: var=output.stdout_lines
+        
+    - name: Check available flash memory
+      ios_command:
+        commands:
+          - 'show flash: | include available'
+      register: output
+
+    - debug: var=output.stdout_lines
+
+    - name: Backup Running Config 
+      ios_config:
+        backup: yes
+        backup_options:
+          filename: "{{ inventory_hostname }}-{{ lookup('pipe', 'date +%Y%m%d-%H%M') }}_running-config.cfg"
+          dir_path: ./
+
+    - name: Test ICMP reachability to 74.200.7.129
+      ios_ping:
+        dest: 74.200.7.129
+      register: output
+      ignore_errors: yes
+
+    - debug: msg="{{ output }}"
+
+    
+    - name: Test ICMP reachability to 192.168.171.1 and setting count
+      ios_ping:
+        dest: 192.168.171.1
+#        count: 20
+      register: output
+      ignore_errors: yes 
+      
+    - debug:
+        var: output 
